@@ -12,3 +12,6 @@ E-Mail: senkju4@gmail.com
 
 #### stringFunctions.js
 * **string.includes(substring)**: Returns whether or not a string contains a substring.
+
+#### arrayFunctions.js
+* **array.includes(value)**: Returns whether or not an array contains a value.
