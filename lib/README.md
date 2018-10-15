@@ -18,3 +18,4 @@ E-Mail: senkju4@gmail.com
 
 #### glFunctions.js
 * **drawRect(paramXStart, paramYStart, paramXEnd, paramYEnd, color)**: Draws a rectangle on the screen
+* **drawCircle(paramX, paramY, radius, color)**: Draws a circle on the screen.
