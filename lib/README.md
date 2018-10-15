@@ -7,7 +7,7 @@ E-Mail: senkju4@gmail.com
 
 ## Features
 #### httpFunctions.js
-* **httpGet(url)**: Performans HTTP GET request and returns the response.
+* **httpGet(url)**: Performs a HTTP GET request and returns the response.
 * **httpPost(url, data, contentType)**: Performs a HTTP POST request and returns the response.
 
 #### stringFunctions.js
