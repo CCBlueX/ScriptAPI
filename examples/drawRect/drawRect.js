@@ -1,26 +1,29 @@
-var scriptName = "Draw Rect"; 
-var scriptVersion = 1.0; 
-var scriptAuthor = "CCBlueX"; 
+var scriptName = "Draw Rect";
+var scriptVersion = 1.0;
+var scriptAuthor = "CCBlueX";
+
 
 // Part of https://github.com/CCBlueX/LiquidBounce-ScriptAPI/tree/master/lib
 script.import("drawRect_files/glFunctions.js");
 
 function Rect() {
 
-    this.getName = function() {
+    this.getName = function () {
         return "DrawRect";
     };
 
-    this.getDescription = function() {
+    this.getDescription = function () {
         return "Draws a rectangle on the screen.";
     };
 
-    this.getCategory = function() {
+    this.getCategory = function () {
         return "Misc";
     };
 
-    this.onRender2D = function() {
+    this.onRender2D = function () {
+
         drawRect(10, 10, 200, 200, 0xFFFFFFFF);
+        drawCircle(60, 300, 50, 0xFFFFFFFF);
     }
 }
 
