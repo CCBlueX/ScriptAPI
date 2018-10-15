@@ -15,3 +15,6 @@ E-Mail: senkju4@gmail.com
 
 #### arrayFunctions.js
 * **array.includes(value)**: Returns whether or not an array contains a value.
+
+#### glFunctions.js
+* **drawRect(paramXStart, paramYStart, paramXEnd, paramYEnd, color)**: Draws a rectangle on the screen
