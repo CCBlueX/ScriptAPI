@@ -2,6 +2,7 @@ var scriptName = "Draw Rect";
 var scriptVersion = 1.0; 
 var scriptAuthor = "CCBlueX"; 
 
+// Part of https://github.com/CCBlueX/LiquidBounce-ScriptAPI/tree/master/lib
 script.import("drawRect_files/glFunctions.js");
 
 function Rect() {
@@ -19,7 +20,6 @@ function Rect() {
     };
 
     this.onRender2D = function() {
-        // Part of https://github.com/CCBlueX/LiquidBounce-ScriptAPI/tree/master/lib
         drawRect(10, 10, 200, 200, 0xFFFFFFFF);
     }
 }
