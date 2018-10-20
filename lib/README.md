@@ -19,6 +19,8 @@ E-Mail: senkju4@gmail.com
 
 #### mathFunctions.js
 * **Math.trunc(float)**: Converts a given float to an integer.
+* **Math.toRadians(degrees)**: Converts from degrees to radians.
+* **Math.toDregrees(radians)**: Converts from radians to degrees.
 
 #### stringFunctions.js
 * **string.includes(substring)**: Returns whether or not a string contains a substring.
