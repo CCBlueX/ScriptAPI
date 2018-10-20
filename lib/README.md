@@ -17,6 +17,9 @@ E-Mail: senkju4@gmail.com
 * **httpGet(url)**: Performs a HTTP GET request and returns the response.
 * **httpPost(url, data, contentType)**: Performs a HTTP POST request and returns the response.
 
+#### mathFunctions.js
+* **Math.trunc(float)**: Converts a given float to an integer.
+
 #### stringFunctions.js
 * **string.includes(substring)**: Returns whether or not a string contains a substring.
 
