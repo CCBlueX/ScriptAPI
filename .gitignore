@@ -69,3 +69,4 @@ fabric.properties
 out
 gen
 .idea/
+obfuscator/in/input.js
