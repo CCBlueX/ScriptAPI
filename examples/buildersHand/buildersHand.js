@@ -2,14 +2,9 @@
 // License: MIT
 // Version: 1.1
 
-script.import("lib/minecraftUtils.js"); // Minecraft Utilities 1.0
-
-var p0w = {};
-p0w.keybind1 = null;
-p0w.keybind1code = 0;
+script.import("lib/minecraftUtils.js"); // Minecraft Utilities 1.1
 
 var Material = Java.type("net.minecraft.block.material.Material");
-var KeyBinding = Java.type("net.minecraft.client.settings.KeyBinding");
 
 var scriptName = "Builder\'s Hand";
 var scriptVersion = 1.1;
@@ -26,25 +21,13 @@ function BuildersHand() {
 		return "World";
 	};
 	this.onEnable = function() {
-		p0w.keybind1code = mc.gameSettings.keyBindAttack.getKeyCode();
-		if (p0w.keybind1code == 0) {
-			p0w.keybind1code = mc.gameSettings.keyBindAttack.getKeyCodeDefault();
-		};
-		mc.gameSettings.keyBindAttack.setKeyCode(0);
-		if (p0w.keybind1 == null) {
-			p0w.keybind1 = new KeyBinding("key.p0w_keybind1", p0w.keybind1code, "key.categories.gameplay");
-		} else {
-			p0w.keybind1.setKeyCode(p0w.keybind1code);
-		};
-		KeyBinding.resetKeyBindingArrayAndHash();
+		hookKeyBind(mc.gameSettings.keyBindAttack, "myKeyBindAttack");
 	};
 	this.onDisable = function() {
-		p0w.keybind1.setKeyCode(0);
-		mc.gameSettings.keyBindAttack.setKeyCode(p0w.keybind1code);
-		KeyBinding.resetKeyBindingArrayAndHash();
+		unhookAllKeyBinds();
 	};
 	this.onUpdate = function() {
-		if (p0w.keybind1.isKeyDown() && mc.rightClickDelayTimer == 0 && !mc.thePlayer.isUsingItem()) {
+		if (myKeyBindAttack.isKeyDown() && mc.rightClickDelayTimer == 0 && !mc.thePlayer.isUsingItem()) {
 			this.placeOnOppositeSide();
 		};
 	};
