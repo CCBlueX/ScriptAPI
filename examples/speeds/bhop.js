@@ -21,8 +21,6 @@ function BHopModule() {
     }
 
     this.onUpdate = function() {
-
-
         if (mc.thePlayer.onGround) {
             mc.thePlayer.jump();
         } 
@@ -33,7 +31,6 @@ function BHopModule() {
     }
 
     this.onDisable = function() {
-        chat.print("ok");  
         mc.timer.timerSpeed = 1;
     }
 }
