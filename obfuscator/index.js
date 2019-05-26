@@ -4,12 +4,31 @@ const path = require("path");
 
 const config = require(path.join(__dirname, "config.json"));
 
-console.log("Reading input file...");
-const input = fs.readFileSync(path.join(__dirname, "in", "input.js")).toString();
+let inputFiles = [];
+fs.readdirSync(path.join(__dirname, "in")).forEach(fileName => {
+    if (!fileName.startsWith(".")) {
+        console.log(`Reading ${fileName}`);
 
-console.log("Obfuscating...");
-var obfuscationResult = obfuscator.obfuscate(input, config);
+        let file = {
+            name: fileName,
+            content: fs.readFileSync(path.join(__dirname, "in", fileName)).toString()
+        }
 
-console.log("Writing output file...");
-fs.writeFileSync(path.join(__dirname, "out", "output.js"), obfuscationResult._obfuscatedCode);
+        inputFiles.push(file);
+    }
+});
+
+for (let input of inputFiles) {
+    console.log(`Obfuscating ${input.name}...`);
+    let obfuscated = obfuscator.obfuscate(input.content, config);
+
+    console.log("Evaluating hex numbers...");
+    let hexNumbers = obfuscated._obfuscatedCode.match(/0[xX][0-9a-fA-F]+/g);
+    for (let number of hexNumbers) {
+        obfuscated._obfuscatedCode = obfuscated._obfuscatedCode.replace(number, eval(number).toFixed(1));
+    }
+
+    fs.writeFileSync(path.join(__dirname, "out", input.name), obfuscated);
+}
+
 console.log("Done");
