@@ -17,17 +17,21 @@ function BHopModule() {
     }
 
     this.onEnable = function() {
-        mc.timer.timerSpeed = 2;
+        mc.timer.timerSpeed = 1.2;
     }
 
-    this.onUpdate = function() {
-        if (mc.thePlayer.onGround) {
-            mc.thePlayer.jump();
-        } 
+    this.onMotion = function() {
+        if (!mc.gameSettings.keyBindForward.isKeyDown())
+            return;
 
-        mc.thePlayer.motionX *= 1.05;
-        mc.thePlayer.motionZ *= 1.05;
-        mc.thePlayer.jumpMovementFactor *= 1.5;
+        mc.thePlayer.setSprinting(true);
+
+        if (mc.thePlayer.onGround) 
+            mc.thePlayer.jump();
+        
+
+        mc.thePlayer.motionX *= 1.02;
+        mc.thePlayer.motionZ *= 1.02;
     }
 
     this.onDisable = function() {
