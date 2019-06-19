@@ -1,7 +1,7 @@
 {
     "compact": true,
     "controlFlowFlattening": true,
-    "controlFlowFlatteningThreshold": 0.2,
+    "controlFlowFlatteningThreshold": 0.3,
     "deadCodeInjection": true,
     "deadCodeInjectionThreshold": 0.2,
     "debugProtection": false,
@@ -15,7 +15,7 @@
     "renameGlobals": false,
     "reservedNames": [],
     "reservedStrings": [],
-    "rotateStringArray": false,
+    "rotateStringArray": true,
     "seed": 0,
     "selfDefending": true,
     "sourceMap": false,
@@ -23,9 +23,9 @@
     "sourceMapFileName": "",
     "sourceMapMode": "separate",
     "stringArray": true,
-    "stringArrayEncoding": true,
-    "stringArrayThreshold": 0.2,
-    "target": "browser",
+    "stringArrayEncoding": "rc4",
+    "stringArrayThreshold": 1,
+    "target": "node",
     "transformObjectKeys": true, 
-    "unicodeEscapeSequence": false
+    "unicodeEscapeSequence": true
 }
