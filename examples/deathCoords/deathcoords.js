@@ -1,23 +1,18 @@
-var scriptName = "DeathCoords";
-var scriptVersion = 1.0;
-var scriptAuthor = "Senk Ju";
+/// api_version=2
+var script = registerScript({
+    name: "DeathCoords",
+    version: "2.0.0",
+    authors: ["Senk Ju"]
+});
 
-function DeathCoordsModule() {
+script.registerModule({
+    name: "DeathCoords",
+    category: "Misc",
+    description: "Displays the coordinates the player died at in the chat."
+}, function(module) {
     var sentMessage = false;
 
-    this.getName = function () {
-        return "DeathCoords";
-    }
-
-    this.getCategory = function () {
-        return "Misc";
-    }
-
-    this.getDescription = function () {
-        return "Displays the coordinates you died at in the chat.";
-    }
-
-    this.onUpdate = function () {
+    module.on("update", function() {
         if (mc.thePlayer.getHealth() <= 0) {
             if (!sentMessage) {
                 var posX = mc.thePlayer.posX.toFixed(0);
@@ -32,17 +27,5 @@ function DeathCoordsModule() {
         } else {
             sentMessage = false;
         }
-    }
-}
-
-
-var deathCoordsModule = new DeathCoordsModule();
-var deathCoordsModuleClient;
-
-function onEnable() {
-    deathCoordsModuleClient = moduleManager.registerModule(deathCoordsModule);
-}
-
-function onDisable() {
-    moduleManager.unregisterModule(deathCoordsModuleClient);
-}
+    });
+});

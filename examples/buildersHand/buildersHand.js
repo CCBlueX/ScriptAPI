@@ -1,37 +1,24 @@
+/// api_version=2
 // Builder's Hand By Mp0wers
 // License: MIT
-// Version: 1.1
-
-script.import("lib/minecraftUtils.js"); // Minecraft Utilities 1.1
+// Version: 2.0.0
 
 var Material = Java.type("net.minecraft.block.material.Material");
 
-var scriptName = "Builder\'s Hand";
-var scriptVersion = 1.1;
-var scriptAuthor = "Mp0wers";
+var script = registerScript({
+    name: "Builder's Hand",
+    version: "2.0.0",
+    authors: ["Mp0wers"]
+});
 
-function BuildersHand() {
-	this.getName = function() {
-		return "BuildersHand";
-	};
-	this.getDescription = function() {
-		return "Place on opposite side.";
-	};
-	this.getCategory = function() {
-		return "World";
-	};
-	this.onEnable = function() {
-		hookKeyBind(mc.gameSettings.keyBindAttack, "myKeyBindAttack");
-	};
-	this.onDisable = function() {
-		unhookAllKeyBinds();
-	};
-	this.onUpdate = function() {
-		if (myKeyBindAttack.isKeyDown() && mc.rightClickDelayTimer == 0 && !mc.thePlayer.isUsingItem()) {
-			this.placeOnOppositeSide();
-		};
-	};
-	this.placeOnOppositeSide = function() {
+script.import("lib/minecraftUtils.js"); // Minecraft Utilities 1.1
+
+script.registerModule({
+    name: "BuildersHand",
+    description: "Place on opposite side.",
+    category: "World"
+}, function(module) {
+    var placeOnOppositeSide = function() {
 		mc.rightClickDelayTimer = 4;
 		var itemStack = mc.thePlayer.inventory.getCurrentItem();
 		var blockPos = mc.objectMouseOver.getBlockPos();
@@ -50,15 +37,18 @@ function BuildersHand() {
 			};
 		};
 	};
-};
 
-var moduleBuildersHand = new BuildersHand();
-var managerBuildersHand;
+    module.on("enable", function() {
+        hookKeyBind(mc.gameSettings.keyBindAttack, "myKeyBindAttack");
+    });
 
-function onLoad() {};
-function onEnable() {
-	managerBuildersHand = moduleManager.registerModule(moduleBuildersHand);
-};
-function onDisable() {
-	moduleManager.unregisterModule(managerBuildersHand);
-};
+    module.on("disable", function() {
+        unhookAllKeyBinds();
+    });
+
+    module.on("update", function() {
+        if (myKeyBindAttack.isKeyDown() && mc.rightClickDelayTimer == 0 && !mc.thePlayer.isUsingItem()) {
+			placeOnOppositeSide();
+		};
+    });
+});

@@ -1,24 +1,21 @@
-// Every command consists of a main function and three inner functions (getName, getAliases and execute).
-function ExampleCommand() {
+/*
+    Registers a new command. Can be invoked by typing '.exampleCommand' into the chat.
+    '.testCommand' and '.demoCommand' will behave the same as '.exampleCommand'.
+*/
+script.registerCommand({
+    name: "exampleCommand", // Regular name of the command.
+    aliases: ["testCommand", "demoCommand"] // Array containing alternative names for the command. Can be empty.
+}, function(command) {
+    // ^ registerCommand takes a callback function as its second argument to which the instance of this script command is passed.
 
-    /* 'getName()' returns the the name of the command. In this example, '.exampleCommand' will run 
-    the command. */
-    this.getName = function() {
-        return "exampleCommand";
-    };
-
-    /* 'getAliases()' can be used to define alias names for a command. '.testCommand' and '.demoCommand' 
-    execute the same code as '.exampleCommand'. */
-    this.getAliases = function() {
-        return ["testCommand", "demoCommand"];
-    };
-
-    /* 'execute()' contains the actual code of the command. It is being executed once the sent the command. 
-    args contains the arguments the user passed to the command. args[0] is the command name. */
-    this.execute = function(args) {
-        chat.print("§aHey! Successfully executed command!");
-        chat.print("Axolotl");
+    /*
+        Commands only have one event: execute. It is called every time the player executes the command. To its callback function
+        an array containing the arguments passed to this command by the user is passed.
+    */
+    command.on("execute", function(args) {
+        Chat.print("§aHey! Successfully executed command!");
+        Chat.print("Axolotl");
 
         mc.thePlayer.jump();
-    };
-}
+    });
+});

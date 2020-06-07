@@ -1,51 +1,48 @@
-var scriptName = "BHop";
-var scriptAuthor = "Senk Ju";
-var scriptVersion = 1.0;
+/// api_version=2
+var script = registerScript({
+    name: "BHop",
+    version: "2.0.0",
+    authors: ["Senk Ju"]
+});
 
-function BHopModule() {
-
-    this.getName = function() {
-        return "BHop";
+script.registerModule({
+    name: "BHop",
+    description: "An example BHop.",
+    category: "Movement",
+    settings: {
+        timer: Setting.float({
+            name: "Timer",
+            min: 1.0,
+            max: 5.0,
+            default: 1.2
+        }),
+        motion: Setting.float({
+            name: "Motion",
+            min: 1.0,
+            max: 1.05,
+            default: 1.02 
+        })
     }
+}, function (module) {
+    module.on("enable", function () {
+        mc.timer.timerSpeed = module.settings.timer.get();
+    });
 
-    this.getDescription = function() {
-        return "An example BHop.";
-    }
+    module.on("disable", function () {
+        mc.timer.timerSpeed = 1;
+    });
 
-    this.getCategory = function() {
-        return "Movement";
-    }
-
-    this.onEnable = function() {
-        mc.timer.timerSpeed = 1.2;
-    }
-
-    this.onMotion = function() {
+    module.on("motion", function () {
         if (!mc.gameSettings.keyBindForward.isKeyDown())
             return;
 
         mc.thePlayer.setSprinting(true);
 
-        if (mc.thePlayer.onGround) 
+        if (mc.thePlayer.onGround)
             mc.thePlayer.jump();
-        
 
-        mc.thePlayer.motionX *= 1.02;
-        mc.thePlayer.motionZ *= 1.02;
-    }
 
-    this.onDisable = function() {
-        mc.timer.timerSpeed = 1;
-    }
-}
-
-var bhopModule = new BHopModule();
-var bhopModuleClient;
-
-function onEnable() {
-    bhopModuleClient = moduleManager.registerModule(bhopModule);
-}
-
-function onDisable() {
-    moduleManager.unregisterModule(bhopModuleClient);
-}
+        mc.thePlayer.motionX *= module.settings.motion.get();
+        mc.thePlayer.motionZ *= module.settings.motion.get();
+    });
+});
