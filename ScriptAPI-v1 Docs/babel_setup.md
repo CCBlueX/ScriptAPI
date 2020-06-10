@@ -1,4 +1,4 @@
-<a href="https://babeljs.io/"><img src="/img/docs/babel.png" width="400" height="auto"></a>
+<a href="https://babeljs.io/"><img src="https://liquidbounce.net/img/docs/babel.png" width="400" height="auto"></a>
 ## Setting up Babel
 When writing scripts for LiquidBounce's ScriptAPI, you are restricted by the fact that [Nashorn](https://docs.oracle.com/javase/9/nashorn/nashorn-java-api.htm#JSNUG112), the script engine used, only supports JavaScript up to version ES5. In other words, many features that were introduced in newer revisions of the language are not natively supported by the client.
 
