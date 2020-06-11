@@ -12,7 +12,7 @@
     "identifiersPrefix": "axo_",
     "inputFileName": "",
     "log": false,
-    "renameGlobals": false,
+    "renameGlobals": true,
     "reservedNames": [],
     "reservedStrings": [],
     "rotateStringArray": true,
