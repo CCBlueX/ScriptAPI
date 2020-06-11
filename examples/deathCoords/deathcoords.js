@@ -21,7 +21,7 @@ script.registerModule({
 
                 var coords = posX + "/" + posY + "/" + posZ;
 
-                chat.print("§8[§9DeathCoords§8] §f" + coords);
+                Chat.print("§8[§9DeathCoords§8] §f" + coords);
                 sentMessage = true;
             }
         } else {
