@@ -1,4 +1,5 @@
 /// api_version=2
+/// engine_flags=-ot=true
 var lock = {};
 
 var script = registerScript({
@@ -57,7 +58,7 @@ script.registerModule({
             default: "RIGHT"
         })
     }
-}, function(module) {
+}, function (module) {
     var nes = null;
     var currentFrame = null;
     var width = 256;
@@ -65,8 +66,9 @@ script.registerModule({
     var texture = null;
     var emulatorThread = null;
     var buttons = null;
+    var fps = 0;
 
-    var setButtonPressed = function(key, pressed) {
+    var setButtonPressed = function (key, pressed) {
         if (pressed) {
             nes.buttonDown(1, key);
         } else {
@@ -74,8 +76,11 @@ script.registerModule({
         }
     }
 
-    module.on("enable", function() {
+    module.on("enable", function () {
         log("Loading emulator...", false);
+
+        var lastFrameTime = System.currentTimeMillis();
+        var frameDeltaTime = 0;
 
         buttons = {
             a: Keyboard.getKeyIndex(module.settings.buttonA.get().toUpperCase()),
@@ -111,7 +116,7 @@ script.registerModule({
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
-        
+
         try {
             nes.loadROM(readRom(module.settings.rom.get()));
         } catch (err) {
@@ -119,15 +124,20 @@ script.registerModule({
         }
 
         emulatorThread = new Timer("Emulator-Thread", true);
-        emulatorThread.schedule(function() { 
+        emulatorThread.schedule(function () {
             nes.frame();
-        }, 1000 / 60, 1000 / 60); 
-    
+            frameDeltaTime = System.currentTimeMillis() - lastFrameTime;
+            lastFrameTime = System.currentTimeMillis();
+        }, 1000 / 60, 1000 / 60);
+
+        emulatorThread.schedule(function () {
+            fps = (1000 / frameDeltaTime) | 0;
+        }, 1000 * 2, 1000 * 2);
 
         log("Performance will improve over time!", false);
     });
 
-    module.on("disable", function() {
+    module.on("disable", function () {
         if (texture !== null) {
             GL11.glDeleteTextures(texture);
         }
@@ -137,7 +147,7 @@ script.registerModule({
         }
     });
 
-    module.on("update", function() {
+    module.on("update", function () {
         if (nes === null || buttons === null) {
             return;
         }
@@ -152,7 +162,7 @@ script.registerModule({
         setButtonPressed(Controller.BUTTON_RIGHT, Keyboard.isKeyDown(buttons.right));
     });
 
-    module.on("render2D", function(event) {
+    module.on("render2D", function (event) {
         if (currentFrame === null || nes === null) {
             return;
         }
@@ -161,6 +171,8 @@ script.registerModule({
 
         var x = resolution.getScaledWidth() / 2 - width / 2;
         var y = resolution.getScaledHeight() / 2 - height / 2;
+
+        Fonts.font40.drawString(fps + " FPS", x, y - 10, 0, true);
 
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
 
@@ -173,7 +185,7 @@ script.registerModule({
         Gui.drawScaledCustomSizeModalRect(x, y, 0, 0, width, height, width, height, width, height);
     });
 
-    module.on("move", function(event) {
+    module.on("move", function (event) {
         event.cancelEvent();
     });
 });
