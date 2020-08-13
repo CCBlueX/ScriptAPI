@@ -4,7 +4,7 @@ var lock = {};
 
 var script = registerScript({
     name: "NES Emulator",
-    version: "2.0.0",
+    version: "2.0.1",
     authors: ["Senk Ju"]
 });
 
@@ -15,6 +15,10 @@ script.import("nes_emulator_files/emulator/controller.js");
 
 var installedRoms = getInstalledRoms();
 
+if (installedRoms.length === 0) {
+    installedRoms.push("No ROMs installed!");
+}
+
 script.registerModule({
     name: "NESEmulator",
     description: "Allows you to play NES games inside LiquidBounce.",
@@ -23,7 +27,7 @@ script.registerModule({
         rom: Setting.list({
             name: "ROM",
             values: installedRoms,
-            default: installedRoms[0] || null
+            default: installedRoms[0]
         }),
         buttonA: Setting.text({
             name: "A",
