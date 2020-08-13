@@ -11,3 +11,4 @@ var Paths = Java.type("java.nio.file.Paths");
 var Files = Java.type("java.nio.file.Files");
 var Timer = Java.type("java.util.Timer");
 var System = Java.type("java.lang.System");
+var Fonts = Java.type("net.ccbluex.liquidbounce.ui.font.Fonts");
