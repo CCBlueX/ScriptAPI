@@ -6,4 +6,4 @@ Documentation: https://github.com/CCBlueX/LiquidBounce-ScriptAPI/wiki
 
 Minecraft Docs: https://scriptapi.liquidbounce.net
 
-Download Scripts: https://forum.ccbluex.net/viewforum.php?id=16
+Download Scripts: https://forums.ccbluex.net/category/9/scripts
