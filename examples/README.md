@@ -9,3 +9,5 @@ The following examples are currently available:
 - [Autojump.mjs](AutoJump.mjs): Jumps automatically on every tick. Made for LiquidBounce Nextgen.
 
 - [Autojump-2.js](AutoJump-2.js): Jumps automatically on every tick. Made for LiquidBounce Legacy.
+
+- [translator.js](translator.js): Uses google translate's api to translate the specified word in a command.
