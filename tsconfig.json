@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig to read more about this file */
+    /* Projects */
+    /* Language and Environment */
+    "target": "es2021",
+    /* Modules */
+    "module": "commonjs",
+    "baseUrl": ".",
+    // "paths": {
+    //   "*": [
+    //     "src/types/*",
+    //     "src/api/*",
+    //     "src/base/*",
+    //   ]
+    // },
+    /* JavaScript Support */
+    "allowJs": true,
+    "checkJs": true,
+    /* Emit */
+    /* Interop Constraints */
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    /* Type Checking */
+    "strict": true,
+    "skipLibCheck": false
+  },
+  "include": [
+    "src/**/*"
+  ]
+}
