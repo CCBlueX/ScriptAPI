@@ -1,0 +1,25 @@
+{
+  "name": "scriptapi",
+  "version": "1.0.0",
+  "description": "LiquidBounce's script API allows the development of custom modules and commands for the client without having to modify its source code. It is based on [GraalJS](https://github.com/oracle/graaljs), an ECMAScript 2023 compliant JavaScript implementation built on [GraalVM](https://www.graalvm.org/). GraalVM's [polyglot functionality](https://www.graalvm.org/latest/reference-manual/polyglot-programming/) enables saemless interoperation between scripts written in JavaScript and the client written in Java and Kotlin. This integration facilitates easy access and utilization of Java's and Minecraft's classes, methods, and fields, making development particularly intuitive for those already familiar with Minecraft modding.",
+  "main": "index.js",
+  "directories": {
+    "example": "examples",
+    "src": "src"
+  },
+  "scripts": {
+    "build": "webpack",
+    "test": "ts-node src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "ignore-loader": "^0.1.2",
+    "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5",
+    "webpack": "^5.92.0",
+    "webpack-cli": "^5.1.4"
+  }
+}
