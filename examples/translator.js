@@ -1,14 +1,9 @@
 // printing bugs out with latin alfabet. because minecraft is wierd and doesnt "allow" it
 
-const URL = Java.type("java.net.URL");
-const HttpURLConnection = Java.type("java.net.HttpURLConnection");
-const BufferedReader = Java.type("java.io.BufferedReader");
-const InputStreamReader = Java.type("java.io.InputStreamReader");
-
 const script = registerScript({
   name: "Translator",
-  version: "1.0.8",
-  authors: ["Trikaes", "1zuna"],
+  version: "2.0.0",
+  authors: ["Trikaes", "1zuna", "MukjepScarlet"],
 });
 
 script.registerCommand({
@@ -35,44 +30,26 @@ script.registerCommand({
       description: "The text to translate",
     },
   ],
-  onExecute(sourceLanguage, targetLanguage, text) {
+  onExecute: async (sourceLanguage, targetLanguage, texts) => {
     try {
-      var text = text.join(" ");
-      const url = new URL(
-        `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLanguage}&tl=${targetLanguage}&dt=t&q=${encodeURIComponent(
+      const text = texts.join(" ");
+
+      const response = await AsyncUtil.request((builder) => {
+        builder.url(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLanguage}&tl=${targetLanguage}&dt=t&q=${encodeURIComponent(
           text
-        )}`
-      ); // finally got this to work
+        )}`);
+      });
 
-      // starting a connection to the api
-      const connection = url.openConnection();
-      // setting the request method to GET (getting a value back from the server)
-      connection.setRequestMethod("GET");
-
-      // getting the response code from the server (went successfully or went wrong)
-      const responseCode = connection.getResponseCode();
-      if (responseCode === 200) {
-        // reading the response from the server (the value returned from the server)
-        const inputStream = connection.getInputStream();
-        const reader = new BufferedReader(new InputStreamReader(inputStream));
-        let line;
-        let response = "";
-        while ((line = reader.readLine()) !== null) {
-          response += line;
-        }
-        reader.close();
-        inputStream.close();
-
-        // parsing the JSON response -> converting a string to object
-        const jsonResponse = JSON.parse(response);
+      if (response.code() === 200) {
+        const jsonResponse = JSON.parse(response.body().string());
         const translatedText = jsonResponse[0][0][0];
 
         Client.displayChatMessage(
-          `§cTranslation §7(§c${sourceLanguage} §7to §c${targetLanguage}§7): §c${text} §7-> §c${translatedText}`
+            `§cTranslation §7(§c${sourceLanguage} §7to §c${targetLanguage}§7): §c${text} §7-> §c${translatedText}`
         ); // cool colors
       } else {
         Client.displayChatMessage(
-          `§4failed to translate text '${text}'. response code: ${responseCode}`
+            `§4failed to translate text '${text}'. response code: ${response.code()}`
         ); // hope i dont get this
       }
     } catch (error) {
