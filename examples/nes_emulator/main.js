@@ -174,9 +174,8 @@ script.registerModule({
 
     mod.on("overlayRender", e => {
         const context = e.getContext();
-
-        const x = context.guiWidth() / 2 - SCREEN_WIDTH / 2;
-        const y = context.guiHeight() / 2 - SCREEN_HEIGHT / 2;
+        const x = ~~(context.guiWidth() / 2 - SCREEN_WIDTH / 2);
+        const y = ~~(context.guiHeight() / 2 - SCREEN_HEIGHT / 2);
 
         if (dirty) {
             texture.upload();
