@@ -55,6 +55,11 @@ script.registerModule({
             choices: ["NTSC", "PAL"],
             default: "NTSC"
         }),
+        scale: Setting.float({
+            name: "Scale",
+            default: 1,
+            range: [1, 5]
+        }),
         buttonA: Setting.key({
             name: "ButtonA",
             default: "key.keyboard.z"
@@ -187,8 +192,8 @@ script.registerModule({
         if (!texture) return;
 
         const context = e.getContext();
-        const x = ~~(context.guiWidth() / 2 - SCREEN_WIDTH / 2);
-        const y = ~~(context.guiHeight() / 2 - SCREEN_HEIGHT / 2);
+        const x = ~~(context.guiWidth() / 2 - Math.floor(SCREEN_WIDTH * mod.settings.scale.value) / 2);
+        const y = ~~(context.guiHeight() / 2 - Math.floor(SCREEN_HEIGHT * mod.settings.scale.value) / 2);
 
         if (dirty) {
             texture.upload();
@@ -199,8 +204,8 @@ script.registerModule({
             context,
             TextureSetup.singleTexture(texture.getTextureView(), texture.getSampler()),
             x, y,
-            x + SCREEN_WIDTH, y + SCREEN_HEIGHT,
-            0, 0, 1, 1, -1, RenderPipelines.GUI_TEXTURED,
+            x + Math.floor(SCREEN_WIDTH * mod.settings.scale.value) , y + Math.floor(SCREEN_HEIGHT * mod.settings.scale.value),
+            0, 0, 1, 1, -1, RenderPipelines.GUI_TEXTURED
         )
     });
 });
