@@ -5,11 +5,10 @@ const script = registerScript({
 });
 
 const File = Java.type("java.io.File");
-const Files = Java.type("java.nio.file.Files");
-const RenderShortcutsKt = Java.type("net.ccbluex.liquidbounce.render.RenderShortcutsKt");
-const NativeImageBackedTexture = Java.type("net.minecraft.client.texture.NativeImageBackedTexture");
-const RenderSystem = Java.type("com.mojang.blaze3d.systems.RenderSystem");
-const Vec3d = Java.type("net.minecraft.util.math.Vec3d");
+const RenderPipelines = Java.type("net.minecraft.client.renderer.RenderPipelines");
+const Render2DKt = Java.type("net.ccbluex.liquidbounce.render.Render2DKt")
+const TextureSetup = Java.type("net.minecraft.client.gui.render.TextureSetup");
+const DynamicTexture = Java.type("net.minecraft.client.renderer.texture.DynamicTexture");
 const FileUtils = Java.type("org.apache.commons.io.FileUtils");
 const StandardCharsets = Java.type("java.nio.charset.StandardCharsets");
 const Thread = Java.type("java.lang.Thread");
@@ -26,12 +25,20 @@ function readRom(name) {
 }
 
 function getInstalledRoms() {
-    return ["None", ...new File(ROMS_BASE_PATH).listFiles().map(f => f.getName())];
+    return ["None", ...(new File(ROMS_BASE_PATH).listFiles() ?? []).map(f => f.getName())];
 }
 
 const installedRoms = getInstalledRoms();
 
-const texture = new NativeImageBackedTexture(SCREEN_WIDTH, SCREEN_HEIGHT, false);
+let texture = null;
+
+script.on("enable", () => {
+    texture = new DynamicTexture("NESEmulator Texture", SCREEN_WIDTH, SCREEN_HEIGHT, false);
+});
+script.on("disable", () => {
+    texture?.close();
+    texture = null;
+});
 
 script.registerModule({
     name: "NESEmulator",
@@ -47,6 +54,11 @@ script.registerModule({
             name: "Region",
             choices: ["NTSC", "PAL"],
             default: "NTSC"
+        }),
+        scale: Setting.float({
+            name: "Scale",
+            default: 1,
+            range: [1, 5]
         }),
         buttonA: Setting.key({
             name: "ButtonA",
@@ -134,11 +146,13 @@ script.registerModule({
         runEmulator = true;
         nes = new NES({
             onFrame: frameBuffer => {
+                if (!texture) return;
+
                 for (let i = 0; i < frameBuffer.length; i++) {
                     const x = i % SCREEN_WIDTH;
                     const y = (i / SCREEN_WIDTH) | 0;
 
-                    texture.getImage().setColor(x, y, frameBuffer[i] | (255 << 24));
+                    texture.getPixels().setPixelABGR(x, y, frameBuffer[i] | (255 << 24));
                 }
 
                 dirty = true;
@@ -147,7 +161,7 @@ script.registerModule({
 
         nes.loadROM(readRom(mod.settings.rom.value));
 
-        UnsafeThread.run(() => {
+        AsyncUtil.launch(() => {
             while (runEmulator) {
                 nes.frame();
                 Thread.sleep((1000 / targetFramerate) | 0);
@@ -157,43 +171,41 @@ script.registerModule({
 
     mod.on("disable", () => {
         runEmulator = false;
+        nes = null;
     });
 
     mod.on("key", e => {
         const key = e.getKey();
 
         for (const k of controller) {
-            if (k.setting.value.getTranslationKey() === key.getTranslationKey()) {
+            if (k.setting.value.getName() === key.getName()) {
                 if (e.getAction() === 1 || e.getAction() === 2) {
-                    nes.buttonDown(1, k.emulatorKey);
+                    nes?.buttonDown(1, k.emulatorKey);
                 } else {
-                    nes.buttonUp(1, k.emulatorKey);
+                    nes?.buttonUp(1, k.emulatorKey);
                 }
             }
         }
     });
 
     mod.on("overlayRender", e => {
+        if (!texture) return;
+
         const context = e.getContext();
+        const x = Primitives.float(context.guiWidth() / 2 - SCREEN_WIDTH * mod.settings.scale.value / 2);
+        const y = Primitives.float(context.guiHeight() / 2 - SCREEN_HEIGHT * mod.settings.scale.value / 2);
 
-        const x = context.getScaledWindowWidth() / 2 - SCREEN_WIDTH / 2;
-        const y = context.getScaledWindowHeight() / 2 - SCREEN_HEIGHT / 2;
+        if (dirty) {
+            texture.upload();
+            dirty = false;
+        }
 
-        RenderShortcutsKt.renderEnvironmentForGUI(context.getMatrices(), renderEnvironment => {
-            texture.bindTexture();
-
-            if (dirty) {
-                texture.upload();
-                dirty = false;
-            }
-
-            RenderSystem.bindTexture(texture.getGlId());
-            RenderSystem.setShaderTexture(0, texture.getGlId());
-
-            RenderShortcutsKt.drawTextureQuad(renderEnvironment, new Vec3d(x, y, 0), new Vec3d(x + SCREEN_WIDTH, y + SCREEN_HEIGHT, 0));
-
-            RenderSystem.setShaderTexture(0, 0);
-        });
+        Render2DKt.drawTexQuad(
+            context,
+            TextureSetup.singleTexture(texture.getTextureView(), texture.getSampler()),
+            x, y,
+            Primitives.float(x + SCREEN_WIDTH * mod.settings.scale.value), Primitives.float(y + SCREEN_HEIGHT * mod.settings.scale.value),
+            0, 0, 1, 1, -1, RenderPipelines.GUI_TEXTURED
+        )
     });
 });
-
