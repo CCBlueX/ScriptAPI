@@ -192,8 +192,8 @@ script.registerModule({
         if (!texture) return;
 
         const context = e.getContext();
-        const x = ~~(context.guiWidth() / 2 - Math.floor(SCREEN_WIDTH * mod.settings.scale.value) / 2);
-        const y = ~~(context.guiHeight() / 2 - Math.floor(SCREEN_HEIGHT * mod.settings.scale.value) / 2);
+        const x = Primitives.float(context.guiWidth() / 2 - SCREEN_WIDTH * mod.settings.scale.value / 2);
+        const y = Primitives.float(context.guiHeight() / 2 - SCREEN_HEIGHT * mod.settings.scale.value / 2);
 
         if (dirty) {
             texture.upload();
@@ -204,7 +204,7 @@ script.registerModule({
             context,
             TextureSetup.singleTexture(texture.getTextureView(), texture.getSampler()),
             x, y,
-            x + Math.floor(SCREEN_WIDTH * mod.settings.scale.value) , y + Math.floor(SCREEN_HEIGHT * mod.settings.scale.value),
+            Primitives.float(x + SCREEN_WIDTH * mod.settings.scale.value), Primitives.float(y + SCREEN_HEIGHT * mod.settings.scale.value),
             0, 0, 1, 1, -1, RenderPipelines.GUI_TEXTURED
         )
     });
