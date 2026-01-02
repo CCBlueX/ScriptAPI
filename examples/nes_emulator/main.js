@@ -30,7 +30,15 @@ function getInstalledRoms() {
 
 const installedRoms = getInstalledRoms();
 
-const texture = new DynamicTexture("NESEmulator Texture", SCREEN_WIDTH, SCREEN_HEIGHT, false);
+let texture = null;
+
+script.on("enable", () => {
+    texture = new DynamicTexture("NESEmulator Texture", SCREEN_WIDTH, SCREEN_HEIGHT, false);
+});
+script.on("disable", () => {
+    texture?.close();
+    texture = null;
+});
 
 script.registerModule({
     name: "NESEmulator",
@@ -133,11 +141,13 @@ script.registerModule({
         runEmulator = true;
         nes = new NES({
             onFrame: frameBuffer => {
+                if (!texture) return;
+
                 for (let i = 0; i < frameBuffer.length; i++) {
                     const x = i % SCREEN_WIDTH;
                     const y = (i / SCREEN_WIDTH) | 0;
 
-                    texture.getImage().setColor(x, y, frameBuffer[i] | (255 << 24));
+                    texture.getPixels().setPixelABGR(x, y, frameBuffer[i] | (255 << 24));
                 }
 
                 dirty = true;
@@ -156,6 +166,7 @@ script.registerModule({
 
     mod.on("disable", () => {
         runEmulator = false;
+        nes = null;
     });
 
     mod.on("key", e => {
@@ -164,15 +175,17 @@ script.registerModule({
         for (const k of controller) {
             if (k.setting.value.getName() === key.getName()) {
                 if (e.getAction() === 1 || e.getAction() === 2) {
-                    nes.buttonDown(1, k.emulatorKey);
+                    nes?.buttonDown(1, k.emulatorKey);
                 } else {
-                    nes.buttonUp(1, k.emulatorKey);
+                    nes?.buttonUp(1, k.emulatorKey);
                 }
             }
         }
     });
 
     mod.on("overlayRender", e => {
+        if (!texture) return;
+
         const context = e.getContext();
         const x = ~~(context.guiWidth() / 2 - SCREEN_WIDTH / 2);
         const y = ~~(context.guiHeight() / 2 - SCREEN_HEIGHT / 2);
@@ -182,7 +195,7 @@ script.registerModule({
             dirty = false;
         }
 
-        Render2DKt.drawBlitOnCurrentLayer(
+        Render2DKt.drawTexQuad(
             context,
             TextureSetup.singleTexture(texture.getTextureView(), texture.getSampler()),
             x, y,
